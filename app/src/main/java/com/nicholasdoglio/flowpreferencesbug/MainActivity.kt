@@ -30,13 +30,16 @@ class MainActivity : AppCompatActivity() {
         night_mode_button.setOnClickListener {
             val selection = (0..2).random()
 
-            Log.d(tag, "SELECTION $selection")
+            // Logged every time the user clicks the button, NOT every time SharedPreferences is updated
+            Log.d(tag, "USER SELECTION MADE: $selection")
 
             GlobalScope.launch { nightModePref.setAndCommit(selection) }
         }
 
         nightModePref.asFlow()
-            .onEach { Log.d(tag, "NIGHT MODE CHANGE: $it") }
+            // This logs whenever a new value is detected in SharedPreferences, it SHOULD
+            // update every time a user makes a selection but it's not.
+            .onEach { Log.d(tag, "NIGHT MODE UPDATED IN SHAREDPREFRENCES: $it") }
             .launchIn(GlobalScope)
     }
 
